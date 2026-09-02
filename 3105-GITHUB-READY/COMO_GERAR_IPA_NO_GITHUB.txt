@@ -1,0 +1,46 @@
+3105 - COMO GERAR A IPA PELO GITHUB
+===================================
+
+ESTE ZIP JA ESTA PRONTO PARA O GITHUB.
+Nao precisa criar nem editar o arquivo build-ipa.yml.
+
+PASSO 1
+Extraia o ZIP "3105-GITHUB-READY.zip" no Windows.
+
+PASSO 2
+Entre no GitHub e crie um repositorio NOVO e PRIVADO.
+Nao marque nenhuma opcao de README, .gitignore ou License ao criar.
+
+PASSO 3
+No repositorio, escolha:
+Add file > Upload files
+
+Envie TODO o conteudo que esta DENTRO da pasta 3105-GITHUB-READY.
+Importante: a pasta .github tambem precisa ser enviada.
+
+PASSO 4
+Clique em "Commit changes".
+
+PASSO 5
+Abra a aba "Actions" do repositorio.
+Clique em "Gerar IPA".
+Depois clique em "Run workflow" e novamente em "Run workflow".
+
+PASSO 6
+Quando a execucao ficar verde, abra ela.
+Na parte "Artifacts", baixe:
+3105-IPA
+
+Dentro do ZIP baixado pelo GitHub estara:
+3105-unsigned.ipa
+
+IMPORTANTE
+Essa IPA sai SEM ASSINATURA. Isso foi feito de proposito para o GitHub
+nao precisar do seu certificado Apple.
+
+Depois voce pode assinar/instalar a IPA no Windows com uma ferramenta
+de sideload compativel com o seu iPhone.
+
+SE O ACTION FICAR VERMELHO
+Baixe o artifact "log-compilacao" e envie esse arquivo para o ChatGPT.
+Com esse log da para identificar exatamente o erro de compilacao.
