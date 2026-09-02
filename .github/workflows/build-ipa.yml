@@ -1,0 +1,66 @@
+name: Gerar IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ipa:
+    runs-on: macos-15
+
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Verificar Xcode
+        run: xcodebuild -version
+
+      - name: Compilar 3105
+        shell: bash
+        run: |
+          cd 3105-GITHUB-READY
+
+          rm -rf build Payload 3105-unsigned.ipa
+          mkdir -p build/Release-iphoneos
+
+          xcodebuild \
+            -project ThreeOneOSFive.xcodeproj \
+            -target 3105 \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            ONLY_ACTIVE_ARCH=NO \
+            CONFIGURATION_BUILD_DIR="$PWD/build/Release-iphoneos" \
+            clean build | tee xcodebuild.log
+
+      - name: Criar IPA
+        shell: bash
+        run: |
+          cd 3105-GITHUB-READY
+
+          APP_PATH="$(find "$PWD/build/Release-iphoneos" -maxdepth 1 -type d -name '*.app' -print -quit)"
+
+          if [ -z "$APP_PATH" ]; then
+            echo "Nenhum .app encontrado"
+            exit 1
+          fi
+
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+
+          ditto -c -k --sequesterRsrc --keepParent Payload 3105-unsigned.ipa
+
+      - name: Liberar IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3105-IPA
+          path: 3105-GITHUB-READY/3105-unsigned.ipa
+
+      - name: Salvar log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-compilacao
+          path: 3105-GITHUB-READY/xcodebuild.log
+          if-no-files-found: ignore
